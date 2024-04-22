@@ -2,24 +2,23 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-#model
-df=pd.read_csv("C:\\Users\\SHRIRAJ\\Desktop\\project1\\emails.csv")
+
+# Model
+df = pd.read_csv("emails.csv", nrows=600)  # Read only the first 300 rows
 df.drop_duplicates(inplace=True)
-X=df['text'].values
-Y=df["spam"].values
+X = df['text'].values
+Y = df["spam"].values
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X,Y, test_size = 0.2 , random_state= 0)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
 from sklearn.feature_extraction.text import CountVectorizer
 cv = CountVectorizer()
-x_train=cv.fit_transform(X_train)
+x_train = cv.fit_transform(X_train)
 x_train.toarray()
 from sklearn.naive_bayes import MultinomialNB
 nb = MultinomialNB()
-nb.fit(x_train,y_train)
+nb.fit(x_train, y_train)
 
-
-
-#streamlit code
+# Streamlit code
 st.title("Spam Email Classifier")
 nav = st.sidebar.radio("Navigation", ["Check Email", "Statistics"])
 if nav == "Check Email":
@@ -37,5 +36,5 @@ if nav == "Check Email":
 if nav == "Statistics":
     st.header("Statistics")
     fig, ax = plt.subplots()  # Create a Matplotlib figure object
-    sns.countplot(df['spam'], ax=ax)  # Plot using Matplotlib
+    sns.countplot(df['spam'], ax=ax)  # Plot using Seaborn
     st.pyplot(fig)  # Pass the figure object to st.pyplot()
